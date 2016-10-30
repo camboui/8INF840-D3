@@ -14,11 +14,12 @@ class Graph
 private:
 	vector<Vertex<T>*> m_vertices;
 	Vertex<T>* m_initialVertex;
-	Alphabet<T> m_alphabet;
+	Alphabet<T>* m_alphabet;
 public:
 	Graph(Vertex<T>* initialVertex);
 	~Graph();
 
+	Alphabet<T>* getAlphabet() {return m_alphabet;};
 	Vertex<T>* getInitialVertex();
 	vector<Vertex<T>*> getVertices();
 	Vertex<T>* getVertex(int index);
@@ -36,7 +37,8 @@ template<typename T>
 Graph<T>::Graph(Vertex<T>* initialVertex):
 	m_initialVertex(initialVertex)
 {
-	if (m_vertices.size() > 0) m_vertices = vector<Vertex<T>*>();
+	m_alphabet = new Alphabet<T>();
+	m_vertices = vector<Vertex<T>*>();
 	m_vertices.push_back(initialVertex);
 }
 
@@ -78,7 +80,7 @@ Vertex<T>* Graph<T>::getVertexByID(int id)
 template<typename T>
 void Graph<T>::addVertex(Vertex<T>* v)
 {
-	if (find(m_vertices.begin(), m_vertices.end(), v) != m_vertices.end()) throw logic_error("the vertex " + v->ID() + " already exists");
+	if (find(m_vertices.begin(), m_vertices.end(), v) != m_vertices.end()) throw logic_error("this vertex already exists");
 	m_vertices.push_back(v);
 }
 
@@ -86,7 +88,7 @@ template<typename T>
 void Graph<T>::addVertex(int id)
 {
 	Vertex<T>* v = new Vertex<T>(id);
-	if (find(m_vertices.begin(), m_vertices.end(), v) != m_vertices.end()) throw logic_error("the vertex " + v->ID() + " already exists");
+	if (find(m_vertices.begin(), m_vertices.end(), v) != m_vertices.end()) throw logic_error("this vertex already exists");
 	m_vertices.push_back(v);
 }
 

@@ -34,7 +34,7 @@ Vertex<T>::Vertex(int id, bool isFinal):
 	m_ID(id),
 	m_isFinal(isFinal)
 {
-	if (m_edges.size() > 0) m_edges = vector<Edge<T>*>();
+	m_edges = vector<Edge<T>*>();
 }
 
 template<typename T>
@@ -77,7 +77,7 @@ void Vertex<T>::addEdge(Vertex<T>* initialVertex, Vertex<T>* destinationVertex, 
 			if (m_edges[i]->getLetter() == letter && m_edges[i]->getCost() == cost) {
 				delete e;
 				e = nullptr;
-				throw logic_error("this transition already exists");
+				throw logic_error("this edge already exists");
 			}
 		}
 		m_edges.push_back(e);

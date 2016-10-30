@@ -10,10 +10,10 @@ int main (void) {
 	
 	//TODO PARSER
 	GraphParser<int> parser("test8.afdC");
-	Graph<int> g = parser.getGraph();
+	Graph<int> g = parser.parseFile();
 
 	//TODO find an accepted word and a rejected word
-	vector<int> word1 = vector<int>{ 1,2,3,4,5 };
+	/*vector<int> word1 = vector<int>{ 1,2,3,4,5 };
 	vector<int> word2 = vector<int>{ 1,2,3,4,5 };
 
 	for (int i = 0; i < word1.size(); i++) 	cout << word1[i] << " ";
@@ -41,6 +41,7 @@ int main (void) {
 
 	for (int i = 0; i < word2.size(); i++) 	cout << word2[i] << " ";
 	cout << " weight is " << g.weight(word2) << endl;
+	*/
 
 
 	//TODO min weight and others...

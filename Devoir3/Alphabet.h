@@ -24,7 +24,7 @@ public:
 template<typename T>
 Alphabet<T>::Alphabet()
 {
-	if (m_letters.size() > 0)	m_letters = vector<T>();
+	m_letters = vector<T>();
 }
 
 template<typename T>
@@ -36,7 +36,7 @@ Alphabet<T>::~Alphabet()
 template<typename T>
 void Alphabet<T>::addLetter(T letter)
 {
-	if (find(m_letters.begin(), m_letters.end(), letter) != m_letters.end()) throw logic_error("the letter " + letter + " already exists");
+	if (find(m_letters.begin(), m_letters.end(), letter) != m_letters.end()) throw logic_error("this letter already exists");
 	m_letters.push_back(letter);
 }
 

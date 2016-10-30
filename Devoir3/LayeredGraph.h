@@ -41,7 +41,7 @@ LayeredGraph<T>::LayeredGraph(Graph<T> g, int n) :
 	for (int i = 0; i < g.getVertices().size(); i++) {
 		layer.push_back(new Vertex<T>(i*1000 + g.getVertex(i)->ID(), false));
 	}
-	if (m_layers.size() > 0) m_layers = vector<vector<Vertex<T>*>>();
+	m_layers = vector<vector<Vertex<T>*>>();
 	for (int i = 0; i < n; i++) {
 		m_layers.push_back(layer);
 	}
