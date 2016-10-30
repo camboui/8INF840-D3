@@ -12,7 +12,6 @@ private:
 	vector<T> m_letters;
 public:
 	Alphabet();
-	~Alphabet();
 
 	void addLetter(T letter);
 	vector<T> getLetters();
@@ -27,11 +26,6 @@ Alphabet<T>::Alphabet()
 	m_letters = vector<T>();
 }
 
-template<typename T>
-Alphabet<T>::~Alphabet()
-{
-	m_letters.~vector();
-}
 
 template<typename T>
 void Alphabet<T>::addLetter(T letter)

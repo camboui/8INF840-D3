@@ -9,6 +9,7 @@ using namespace std;
 int main (void) {
 	
 	//TODO PARSER
+	
 	GraphParser<int> parser("test8.afdC");
 	Graph<int> g = parser.parseFile();
 
@@ -47,5 +48,5 @@ int main (void) {
 	//TODO min weight and others...
 	
 	system("pause");
-	return 0;
+	return EXIT_SUCCESS;
 }

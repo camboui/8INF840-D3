@@ -14,7 +14,6 @@ private:
 	T		m_letter;
 public:
 	Edge(Vertex<T>* initialVertex, Vertex<T>* destinationVertex, int cost, T letter);
-	~Edge();
 
 	Vertex<T>* getInitial();
 	Vertex<T>* getDestination();
@@ -32,14 +31,6 @@ Edge<T>::Edge(Vertex<T>* initialVertex, Vertex<T>* destinationVertex, int cost, 
 {
 }
 
-template <typename T>
-Edge<T>::~Edge()
-{
-	delete m_destinationVertex;
-	delete m_initialVertex;
-	m_destinationVertex = nullptr;
-	m_initialVertex = nullptr;
-}
 
 template <typename T>
 Vertex<T> * Edge<T>::getInitial()

@@ -16,7 +16,6 @@ private:
 	vector<Edge<T>*> m_edges; //outgoing edges
 public:
 	Vertex(int id, bool isFinal);
-	~Vertex();
 
 	int ID();
 	bool isFinal();
@@ -37,11 +36,6 @@ Vertex<T>::Vertex(int id, bool isFinal):
 	m_edges = vector<Edge<T>*>();
 }
 
-template<typename T>
-Vertex<T>::~Vertex()
-{
-	m_edges.~vector();
-}
 
 template<typename T>
 int Vertex<T>::ID()
@@ -75,16 +69,12 @@ void Vertex<T>::addEdge(Vertex<T>* initialVertex, Vertex<T>* destinationVertex, 
 	if (find(m_edges.begin(), m_edges.end(), e) == m_edges.end()) {
 		for (int i = 0; i < m_edges.size(); i++) {
 			if (m_edges[i]->getLetter() == letter && m_edges[i]->getCost() == cost) {
-				delete e;
-				e = nullptr;
 				throw logic_error("this edge already exists");
 			}
 		}
 		m_edges.push_back(e);
 	}
 	else {
-		delete e;
-		e = nullptr;
 		throw logic_error("this edge already exists");
 	}
 }

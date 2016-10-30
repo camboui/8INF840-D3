@@ -17,7 +17,6 @@ private:
 	Graph<T> m_graph;
 public:
 	LayeredGraph(Graph<T> g, int n);
-	~LayeredGraph();
 
 	virtual Vertex<T>* getVertexByID(int id);
 	vector<vector<Vertex<T>*>> getLayers();
@@ -53,16 +52,9 @@ LayeredGraph<T>::LayeredGraph(Graph<T> g, int n) :
 					Vertex<T>* initial = getVertexByID(i * 1000 + g.getVertex(j)->ID());
 					Vertex<T>* destination = getVertexByID((i + 1) * 1000 + g.getVertex(j)->getEdge(k)->getDestination()->ID());
 					addEdge(initial , destination, g.getVertex(j)->getEdge(k)->getCost(), g.getVertex(j)->getEdge(k)->getLetter());
-					delete initial;
-					delete destination;
-					initial = nullptr;
-					destination = nullptr;
 				}
 				catch (logic_error e)
 				{
-					delete initialVertex;
-					initialVertex = nullptr;
-					layer.~vector();
 					cout << "Error : " << e.what() << endl;
 				}
 			}
@@ -78,11 +70,6 @@ LayeredGraph<T>::LayeredGraph(Graph<T> g, int n) :
 	}
 }
 
-template<typename T>
-LayeredGraph<T>::~LayeredGraph()
-{
-	m_layers.~vector();
-}
 
 template<typename T>
 Vertex<T>* LayeredGraph<T>::getVertexByID(int id)

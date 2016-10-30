@@ -17,7 +17,6 @@ private:
 	Alphabet<T>* m_alphabet;
 public:
 	Graph(Vertex<T>* initialVertex);
-	~Graph();
 
 	Alphabet<T>* getAlphabet() {return m_alphabet;};
 	Vertex<T>* getInitialVertex();
@@ -42,13 +41,6 @@ Graph<T>::Graph(Vertex<T>* initialVertex):
 	m_vertices.push_back(initialVertex);
 }
 
-template<typename T>
-Graph<T>::~Graph()
-{
-	delete m_initialVertex;
-	m_initialVertex = nullptr;
-	m_vertices.~vector();
-}
 
 template<typename T>
 Vertex<T>* Graph<T>::getInitialVertex()

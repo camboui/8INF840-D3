@@ -18,7 +18,6 @@ private:
 	ifstream m_file;
 public:
 	GraphParser(string filename);
-	~GraphParser();
 
 	Graph<T> parseFile();
 };
@@ -38,11 +37,6 @@ GraphParser<T>::GraphParser(string filename)
 	}
 }
 
-template<typename T>
-GraphParser<T>::~GraphParser()
-{
-
-}
 
 bool isFinal(vector<int> finals, int num) {
 	return find(finals.begin(), finals.end(), num) != finals.end();
