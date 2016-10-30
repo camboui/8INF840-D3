@@ -2,7 +2,7 @@
 #define EDGE_H
 
 template <typename T>
-class Vertex<T>;
+class Vertex;
 
 template <typename T>
 class Edge
@@ -16,8 +16,8 @@ public:
 	Edge(Vertex<T>* initialVertex, Vertex<T>* destinationVertex, int cost, T letter);
 	~Edge();
 
-	Vertex* getInitial();
-	Vertex* getDestination();
+	Vertex<T>* getInitial();
+	Vertex<T>* getDestination();
 	int		getCost();
 	T		getLetter();
 	string	toString();
@@ -42,13 +42,13 @@ Edge<T>::~Edge()
 }
 
 template <typename T>
-Vertex * Edge<T>::getInitial()
+Vertex<T> * Edge<T>::getInitial()
 {
 	return m_initialVertex;
 }
 
 template <typename T>
-Vertex * Edge<T>::getDestination()
+Vertex<T> * Edge<T>::getDestination()
 {
 	return m_destinationVertex;
 }
