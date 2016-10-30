@@ -31,7 +31,7 @@ public:
 
 template<typename T>
 Vertex<T>::Vertex(int id, bool isFinal):
-	m_id(id),
+	m_ID(id),
 	m_isFinal(isFinal)
 {
 	if (m_edges.size() > 0) m_edges = vector<Edge<T>*>();
@@ -77,7 +77,7 @@ void Vertex<T>::addEdge(Vertex<T>* initialVertex, Vertex<T>* destinationVertex, 
 			if (m_edges[i]->getLetter() == letter && m_edges[i]->getCost() == cost) {
 				delete e;
 				e = nullptr;
-				throw logic_error("a transition from " +  m_ID + " by the letter " + letter + " with a cost of " + cost + " already exists");
+				throw logic_error("this transition already exists");
 			}
 		}
 		m_edges.push_back(e);
@@ -85,7 +85,7 @@ void Vertex<T>::addEdge(Vertex<T>* initialVertex, Vertex<T>* destinationVertex, 
 	else {
 		delete e;
 		e = nullptr;
-		throw logic_error("the edge " + e.toString() + " already exists");
+		throw logic_error("this edge already exists");
 	}
 }
 
@@ -97,7 +97,7 @@ Vertex<T>* Vertex<T>::nextVertex(T letter)
 			return m_edges[i]->getDestination();
 		}
 	}
-	throw logic_error("there is no transition from " + m_ID + " by the letter " + letter);
+	throw logic_error("there is no transition by this letter");
 }
 
 template<typename T>
@@ -109,7 +109,7 @@ Vertex<T>* Vertex<T>::nextVertex(T letter, int * w)
 			return m_edges[i]->getDestination();
 		}
 	}
-	throw logic_error("there is no transition from " + m_ID + " by the letter " + letter);
+	throw logic_error("there is no transition by this letter");
 }
 
 #endif 

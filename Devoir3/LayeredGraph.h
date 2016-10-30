@@ -32,7 +32,8 @@ public:
 template<typename T>
 LayeredGraph<T>::LayeredGraph(Graph<T> g, int n) :
 	Graph(new Vertex<T>(-1, false)),
-	m_nbLayers(n)
+	m_nbLayers(n),
+	m_graph(g)
 {
 	Vertex<T>* initialVertex = new Vertex<T>(-1, false); //special ID 
 	addEdge(initialVertex, g.getInitialVertex(), 0, numeric_limits<T>::min()); //special values
@@ -129,8 +130,7 @@ template<typename T>
 int LayeredGraph<T>::weight(vector<T> word)
 {
 	Vertex<T>* current =  getInitialVertex()->getEdge(0)->getDestination();
-	int* w;
-	*w = 0;
+	int* w = new int(0);
 	for (int i = 0; i < word.size(); i++) {
 		try
 		{

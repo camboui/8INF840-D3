@@ -127,8 +127,7 @@ template<typename T>
 int Graph<T>::weight(vector<T> word)
 {
 	Vertex<T>* current = m_initialVertex;
-	int* w;
-	*w = 0;
+	int* w = new int(0);
 	for (int i = 0; i < word.size(); i++) {
 		try
 		{
