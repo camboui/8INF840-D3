@@ -14,6 +14,7 @@ class Graph
 private:
 	vector<Vertex<T>*> m_vertices;
 	Vertex* m_initialVertex;
+	Alphabet<T> m_alphabet;
 public:
 	Graph(Vertex<T>* initialVertex);
 	~Graph();
