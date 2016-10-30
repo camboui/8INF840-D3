@@ -13,7 +13,7 @@ class Graph
 {
 private:
 	vector<Vertex<T>*> m_vertices;
-	Vertex* m_initialVertex;
+	Vertex<T>* m_initialVertex;
 	Alphabet<T> m_alphabet;
 public:
 	Graph(Vertex<T>* initialVertex);
@@ -69,7 +69,7 @@ Vertex<T>* Graph<T>::getVertex(int index)
 template<typename T>
 Vertex<T>* Graph<T>::getVertexByID(int id)
 {
-	for (int i = 0; i < getVertices() < i++) {
+	for (int i = 0; i < getVertices().size(); i++) {
 		if (getVertex(i)->ID() == id) return getVertex(i);
 	}
 	throw logic_error("there is no vertex with the ID " + id);
