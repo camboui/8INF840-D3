@@ -36,12 +36,14 @@ LayeredGraph<T>::LayeredGraph(Graph<T> g, int n) :
 {
 	Vertex<T>* initialVertex = new Vertex<T>(-1, false); //special ID 
 	addEdge(initialVertex, g.getInitialVertex(), 0, numeric_limits<T>::min()); //special values
-	vector<Vertex<T>*> layer = vector<Vertex<T>*>();
-	for (int i = 0; i < g.getVertices().size(); i++) {
-		layer.push_back(new Vertex<T>(i*1000 + g.getVertex(i)->ID(), false));
-	}
+	
+	//create each layer and add it to the graph
 	m_layers = vector<vector<Vertex<T>*>>();
 	for (int i = 0; i < n; i++) {
+		vector<Vertex<T>*> layer = vector<Vertex<T>*>();
+		for (int j = 0; j < g.getVertices().size(); j++) {
+			layer.push_back(new Vertex<T>(i * 1000 + g.getVertex(j)->ID(), false));
+		}
 		m_layers.push_back(layer);
 	}
 
@@ -49,7 +51,7 @@ LayeredGraph<T>::LayeredGraph(Graph<T> g, int n) :
 	for (int i = 0; i < n-1; i++) {
 		//for each vertex
 		for (int j = 0; j < g.getVertices().size(); j++) {
-			//for each transition
+			//add transition
 			for (int k = 0; k < g.getVertex(j)->getEdges().size(); k++) {
 				try
 				{
@@ -68,7 +70,7 @@ LayeredGraph<T>::LayeredGraph(Graph<T> g, int n) :
 	Vertex<T>* finalVertex = new Vertex<T>(-2, true); //special ID
 	for (int i = 0; i < g.getVertices().size(); i++) {
 		if (g.getVertex(i)->isFinal()) {		
-			Vertex<T>* initial = getVertexByID(n * 1000 + g.getVertex(i)->ID());
+			Vertex<T>* initial = getVertexByID((n-1) * 1000 + g.getVertex(i)->ID());
 			addEdge(initial, finalVertex, 0, numeric_limits<T>::min()); //special values
 		}
 	}
@@ -110,6 +112,7 @@ bool LayeredGraph<T>::accepte(vector<T> word)
 		catch (logic_error e)
 		{
 			cout << "Error : " << e.what() << endl;
+			return false;
 		}
 	}
 	current = current->getEdge(0)->getDestination();

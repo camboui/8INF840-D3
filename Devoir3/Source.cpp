@@ -11,8 +11,7 @@ void printAndAccept(vector<T> word, Graph<T> g);
 
 int main (void) {
 	
-	//TODO PARSER
-
+	//parser file to get graph
 	GraphParser<char> parserChar("test.afdC");
 	Graph<char> gChar = parserChar.parseFile();
 
@@ -21,18 +20,20 @@ int main (void) {
 	
 	cout << endl;
 
+	//parser file to get graph
 	GraphParser<int> parserInt("test8.afdC");
 	Graph<int> gInt = parserInt.parseFile();
 
 	printAndAccept({ 1,2,3,4,5 }, gInt);
 	printAndAccept({ 1,2,3,4,5 }, gInt);
 
+	cout << endl;
 	
 	//for word with a length of 5
 	LayeredGraph<char> lg(gChar, 5);
 
-	//printAndAccept({ 1,2,3,4,5 }, lg);
-	//printAndAccept({ 1,2,3,4,5 }, lg);
+	printAndAccept({ 'a','b','c','b','c','b','a' }, lg);
+	printAndAccept({ 'a','b','c','a','b','c' }, lg);
 
 
 	//TODO min weight and others...
@@ -50,6 +51,7 @@ void printAndAccept(vector<T> word,Graph<T> g) {
 		cout << word[i] << " ";
 	cout << endl;
 	//show if accepted or not
+
 	if (g.accepte(word))
 		cout << "... is ACCEPTED by g" << endl;
 	else
