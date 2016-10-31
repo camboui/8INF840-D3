@@ -29,7 +29,7 @@ int main (void) {
 
 	
 	//for word with a length of 5
-	//LayeredGraph<int> lg(gInt, 5);
+	LayeredGraph<char> lg(gChar, 5);
 
 	//printAndAccept({ 1,2,3,4,5 }, lg);
 	//printAndAccept({ 1,2,3,4,5 }, lg);

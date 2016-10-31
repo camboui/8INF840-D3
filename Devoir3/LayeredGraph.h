@@ -44,8 +44,12 @@ LayeredGraph<T>::LayeredGraph(Graph<T> g, int n) :
 	for (int i = 0; i < n; i++) {
 		m_layers.push_back(layer);
 	}
+
+	//for each layer
 	for (int i = 0; i < n-1; i++) {
+		//for each vertex
 		for (int j = 0; j < g.getVertices().size(); j++) {
+			//for each transition
 			for (int k = 0; k < g.getVertex(j)->getEdges().size(); k++) {
 				try
 				{
@@ -60,7 +64,7 @@ LayeredGraph<T>::LayeredGraph(Graph<T> g, int n) :
 			}
 		}
 	}
-	
+	//link every final vertex inf simpleGraph to LayeredGraph final vertex
 	Vertex<T>* finalVertex = new Vertex<T>(-2, true); //special ID
 	for (int i = 0; i < g.getVertices().size(); i++) {
 		if (g.getVertex(i)->isFinal()) {		
