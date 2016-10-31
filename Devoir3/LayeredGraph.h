@@ -141,15 +141,18 @@ int LayeredGraph<T>::weight(vector<T> word)
 		}
 		catch (logic_error e)
 		{
-			cout << "Error : " << e.what() << endl;
+			cout << "Can't accept : " << e.what() << endl;
+			return -1;
 		}
 	}
-	current = current->getEdge(0)->getDestination();
+	if(current->getEdges().size()>0)
+		current = current->getEdge(0)->getDestination();
+	
 	if (current->isFinal()) {
 		return *w;
 	}
 	else {
-		cout << "Error : word rejected" << endl;
+		cout << "Can't accept : Not in a final State " << endl;
 		return -1;
 	}
 }

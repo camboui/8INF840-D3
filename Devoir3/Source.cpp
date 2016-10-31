@@ -29,7 +29,7 @@ int main (void) {
 	
 	//for word with a length of 5
 	LayeredGraph<char> lg(gChar, 5);
-
+	lg.traceAccept({ 'a','b','c','b','c' });
 	lg.traceAccept({ 'a','b','c','b','a' });
 	lg.traceAccept({ 'a','b','c','a','b' });
 

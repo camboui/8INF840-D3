@@ -128,9 +128,9 @@ inline void Graph<T>::traceAccept(vector<T> word)
 	cout << endl;
 
 	//show if accepted or not
-	if (accept(word)) {
-		cout << "... is ACCEPTED by g with a weight of : "<< weight(word) << endl;
-	}
+	int w = weight(word);
+	if (w!=-1)
+		cout << "... is ACCEPTED by g with a weight of : "<< w << endl;
 	else
 		cout << "... is REJECTED by g" << endl;
 	cout << endl;
@@ -148,14 +148,15 @@ int Graph<T>::weight(vector<T> word)
 		}
 		catch (logic_error e)
 		{
-			cout << "Error : " << e.what() << endl;
+			cout << "Can't accept : " << e.what() << endl;
+			return -1;
 		}
 	}
 	if (current->isFinal()) {
 		return *w;
 	}
 	else {
-		cout << "Error : word rejected" << endl;
+		cout << "Can't accept : Not in a final State " << endl;
 		return -1;
 	}
 }
