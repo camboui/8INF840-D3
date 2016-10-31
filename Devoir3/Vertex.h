@@ -84,11 +84,11 @@ Vertex<T>* Vertex<T>::nextVertex(T letter)
 {
 	for (int i = 0; i < m_edges.size(); i++) {
 		if (m_edges[i]->getLetter() == letter) {
-			cout << "Consuming '" << letter << "' going to vertex " << m_edges[i]->getDestination()->ID() << endl;
+			cout << m_edges[i]->getInitial()->ID() << "-> '" << letter << "' ->" << m_edges[i]->getDestination()->ID() << endl;
 			return m_edges[i]->getDestination();
 		}
 	}
-	string msg = "there is no transition for letter '"s + to_string(letter) + "' from "s + to_string(m_ID);
+	string msg = "there is no transition for letter '"s + to_string(letter) + "' from vertex "s + to_string(m_ID);
 	throw logic_error(msg.c_str());
 }
 
@@ -98,11 +98,11 @@ Vertex<T>* Vertex<T>::nextVertex(T letter, int * w)
 	for (int i = 0; i < m_edges.size(); i++) {
 		if (m_edges[i]->getLetter() == letter) {
 			*w += m_edges[i]->getCost();
-			cout << "Consuming '" << letter << "' going to vertex " << m_edges[i]->getDestination()->ID() << endl;
+			cout << m_edges[i]->getInitial()->ID() << "-> '" << letter << "' ->" << m_edges[i]->getDestination()->ID() << endl;
 			return m_edges[i]->getDestination();
 		}
 	}
-	string msg = "there is no transition for letter '"s + to_string(letter) +"' from "s + to_string(m_ID);
+	string msg = "there is no transition for letter '"s + to_string(letter) +"' from vertex "s + to_string(m_ID);
 	throw logic_error(msg.c_str());
 }
 

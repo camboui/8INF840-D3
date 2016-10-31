@@ -26,7 +26,8 @@ public:
 	void addVertex(Vertex<T>* v);
 	void addVertex(int id);
 	void addEdge(Vertex<T>* initialVertex, Vertex<T>* destinationVertex, int cost, T letter);
-	virtual bool accepte(vector<T> word);
+	virtual bool accept(vector<T> word);
+	virtual void traceAccept(vector<T> word);
 	virtual int weight(vector<T> word);
 };
 
@@ -99,7 +100,7 @@ void Graph<T>::addEdge(Vertex<T>* initialVertex, Vertex<T>* destinationVertex, i
 
 
 template<typename T>
-bool Graph<T>::accepte(vector<T> word)
+bool Graph<T>::accept(vector<T> word)
 {
 	Vertex<T>* current = m_initialVertex;
 
@@ -116,6 +117,23 @@ bool Graph<T>::accepte(vector<T> word)
 	}
 
 	return current->isFinal();
+}
+
+template<typename T>
+inline void Graph<T>::traceAccept(vector<T> word)
+{
+	//print word
+	for (int i = 0; i < word.size(); i++)
+		cout << word[i] << " ";
+	cout << endl;
+
+	//show if accepted or not
+	if (accept(word)) {
+		cout << "... is ACCEPTED by g with a weight of : "<< weight(word) << endl;
+	}
+	else
+		cout << "... is REJECTED by g" << endl;
+	cout << endl;
 }
 
 template<typename T> 
