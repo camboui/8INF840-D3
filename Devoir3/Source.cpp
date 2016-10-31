@@ -6,47 +6,53 @@
 
 using namespace std;
 
+template<typename T>
+void printAndAccept(vector<T> word, Graph<T> g);
+
 int main (void) {
 	
 	//TODO PARSER
+
+	GraphParser<char> parserChar("test.afdC");
+	Graph<char> gChar = parserChar.parseFile();
+
+	printAndAccept({ 'a','b','c','a','b','c','b','a' }, gChar);
+	printAndAccept({ 'a','b','c','a','b','c' }, gChar);
 	
-	GraphParser<int> parser("test8.afdC");
-	Graph<int> g = parser.parseFile();
+	cout << endl;
 
-	//TODO find an accepted word and a rejected word
-	/*vector<int> word1 = vector<int>{ 1,2,3,4,5 };
-	vector<int> word2 = vector<int>{ 1,2,3,4,5 };
+	GraphParser<int> parserInt("test8.afdC");
+	Graph<int> gInt = parserInt.parseFile();
 
-	for (int i = 0; i < word1.size(); i++) 	cout << word1[i] << " ";
-	if (g.accepte(word1)) cout << " is accepte by g" << endl;
-	else cout << " is reject by g" << endl;
+	printAndAccept({ 1,2,3,4,5 }, gInt);
+	printAndAccept({ 1,2,3,4,5 }, gInt);
 
-	for (int i = 0; i < word2.size(); i++) 	cout << word2[i] << " ";
-	if (g.accepte(word2)) cout << " is accepte by g" << endl;
-	else cout << " is reject by g" << endl;
 	
 	//for word with a length of 5
-	LayeredGraph<int> lg(g, 5);
+	//LayeredGraph<int> lg(gInt, 5);
 
-	for (int i = 0; i < word1.size(); i++) 	cout << word1[i] << " ";
-	if (lg.accepte(word1)) cout << " is accepte by lg" << endl;
-	else cout << " is reject by g" << endl;
-
-	for (int i = 0; i < word2.size(); i++) 	cout << word2[i] << " ";
-	if (lg.accepte(word2)) cout << " is accepte by lg" << endl;
-	else cout << " is reject by g" << endl;
-
-
-	for (int i = 0; i < word1.size(); i++) 	cout << word1[i] << " ";
-	cout << " weight is " << g.weight(word1) << endl;
-
-	for (int i = 0; i < word2.size(); i++) 	cout << word2[i] << " ";
-	cout << " weight is " << g.weight(word2) << endl;
-	*/
+	//printAndAccept({ 1,2,3,4,5 }, lg);
+	//printAndAccept({ 1,2,3,4,5 }, lg);
 
 
 	//TODO min weight and others...
 	
+	
 	system("pause");
 	return EXIT_SUCCESS;
+}
+
+template<typename T>
+void printAndAccept(vector<T> word,Graph<T> g) {
+
+	//print word
+	for (int i = 0; i < word.size(); i++)
+		cout << word[i] << " ";
+	cout << endl;
+	//show if accepted or not
+	if (g.accepte(word))
+		cout << "... is accepted by g" << endl;
+	else
+		cout << "... is rejected by g" << endl;
+	cout << endl;
 }
