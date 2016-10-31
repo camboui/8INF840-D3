@@ -110,7 +110,8 @@ bool Graph<T>::accepte(vector<T> word)
 		}
 		catch (logic_error e)
 		{
-			cout << "Staying in the same vertex : " << e.what() << endl;
+			cout << "Can't accept : " << e.what() << endl;
+			return false;
 		}
 	}
 

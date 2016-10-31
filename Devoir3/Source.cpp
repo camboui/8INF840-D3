@@ -16,7 +16,7 @@ int main (void) {
 	GraphParser<char> parserChar("test.afdC");
 	Graph<char> gChar = parserChar.parseFile();
 
-	printAndAccept({ 'a','b','c','a','b','c','b','a' }, gChar);
+	printAndAccept({ 'a','b','c','b','c','b','a' }, gChar);
 	printAndAccept({ 'a','b','c','a','b','c' }, gChar);
 	
 	cout << endl;
@@ -51,8 +51,8 @@ void printAndAccept(vector<T> word,Graph<T> g) {
 	cout << endl;
 	//show if accepted or not
 	if (g.accepte(word))
-		cout << "... is accepted by g" << endl;
+		cout << "... is ACCEPTED by g" << endl;
 	else
-		cout << "... is rejected by g" << endl;
+		cout << "... is REJECTED by g" << endl;
 	cout << endl;
 }
