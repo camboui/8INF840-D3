@@ -1,0 +1,6 @@
+4 taille alphabet
+5 taille du mot
+1 1 1 1 liste des valeurs minimales - Une lettre doit se trouver au moins une fois sur le chemin le plus court
+2 2 2 2 liste des valeurs maximales - Une lettre doit se trouver au maximum 2 fois sur le chemin le plus court
+
+
