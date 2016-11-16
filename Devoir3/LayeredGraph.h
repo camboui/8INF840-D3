@@ -2,7 +2,11 @@
 #define LAYERED_GRAPH_H
 
 #include <vector>
+#include <map>
 
+#include <map>
+
+#include "Constraint.h"
 #include "Graph.h"
 
 using namespace std;
@@ -20,7 +24,7 @@ public:
 	//virtual Vertex<T>* getVertexByID(int id);
 	vector<vector<Vertex<T>*>> getLayers();
 	vector<Vertex<T>*> getLayer(int index);
-	virtual bool accept(vector<T> word);
+	virtual bool accept(vector<T> word, map<T, Constraint> constraints = nullptr);
 	virtual int weight(vector<T> word);
 };
 
@@ -107,23 +111,52 @@ vector<Vertex<T>*> LayeredGraph<T>::getLayer(int index)
 
 
 template<typename T>
-bool LayeredGraph<T>::accept(vector<T> word)
+bool LayeredGraph<T>::accept(vector<T> word, map<T, Constraint> constraints)
 {
-	Vertex<T>* test = getInitialVertex();
-	Vertex<T>* current = getInitialVertex()->getEdge(0)->getDestination();
-	for (int i = 0; i < word.size(); i++) {
-		try
-		{
-			current = current->nextVertex(word[i]);
+	if (constraints.size() == 0) {
+		Vertex<T>* test = getInitialVertex();
+		Vertex<T>* current = getInitialVertex()->getEdge(0)->getDestination();
+		for (int i = 0; i < word.size(); i++) {
+			try
+			{
+				current = current->nextVertex(word[i]);
+			}
+			catch (logic_error e)
+			{
+				cout << "Can't accept : " << e.what() << endl;
+				return false;
+			}
 		}
-		catch (logic_error e)
-		{
-			cout << "Can't accept : " << e.what() << endl;
-			return false;
-		}
+		current = current->getEdge(0)->getDestination();
+		return current->isFinal();
 	}
-	current = current->getEdge(0)->getDestination();
-	return current->isFinal();
+	else {
+		map<T, int> constrCount = map<T, int>();
+		Vertex<T>* test = getInitialVertex();
+		Vertex<T>* current = getInitialVertex()->getEdge(0)->getDestination();
+		for (int i = 0; i < word.size(); i++) {
+			constrCount[word[i]]++;
+			if (constrCount[word[i]] > constraints[word[i]].getMax()) {
+				return false;
+			}
+			try
+			{
+				current = current->nextVertex(word[i]);
+			}
+			catch (logic_error e)
+			{
+				cout << "Can't accept : " << e.what() << endl;
+				return false;
+			}
+		}
+		current = current->getEdge(0)->getDestination();
+		for (int i = 0; i < getAlphabet()->getLetters().size(); i++) {
+			if (constrCount[i] < constraints[i].getMin()) {
+				return false;
+			}
+		}
+		return current->isFinal();
+	}
 }
 
 

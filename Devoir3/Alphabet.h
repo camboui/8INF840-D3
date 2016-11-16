@@ -15,9 +15,9 @@ public:
 
 	void addLetter(T letter);
 	vector<T> getLetters();
+	T getLetter(int i);
 	bool wordIsValide(vector<T> word);
 };
-
 
 
 template<typename T>
@@ -38,6 +38,12 @@ template<typename T>
 vector<T> Alphabet<T>::getLetters()
 {
 	return m_letters;
+}
+
+template<typename T>
+T Alphabet<T>::getLetter(int i)
+{
+	return m_letters[i];
 }
 
 template<typename T>

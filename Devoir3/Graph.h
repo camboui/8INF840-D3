@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Vertex.h"
+#include "Alphabet.h"
 
 using namespace std;
 
@@ -18,7 +19,7 @@ private:
 public:
 	Graph(Vertex<T>* initialVertex);
 
-	Alphabet<T>* getAlphabet() {return m_alphabet;};
+	Alphabet<T>* getAlphabet();
 	Vertex<T>* getInitialVertex();
 	vector<Vertex<T>*> getVertices();
 	Vertex<T>* getVertex(int index);
@@ -42,6 +43,12 @@ Graph<T>::Graph(Vertex<T>* initialVertex):
 	m_vertices.push_back(initialVertex);
 }
 
+
+template<typename T>
+Alphabet<T>* Graph<T>::getAlphabet()
+{
+	return m_alphabet;
+}
 
 template<typename T>
 Vertex<T>* Graph<T>::getInitialVertex()

@@ -1,8 +1,11 @@
 #include <cstdlib>
-#include<iostream>
+#include <iostream>
+#include <map>
 
 #include "GraphParser.h"
 #include "LayeredGraph.h"
+#include "ConstraintParser.h"
+
 
 using namespace std;
 
@@ -12,7 +15,14 @@ int main (void) {
 	GraphParser<char> parserChar("test.afdC");
 	Graph<char> gChar = parserChar.parseFile();
 
-	
+	ConstraintParser<char> constrParser("test_limite.afdC", gChar);
+	map<char, Constraint> constrs = constrParser.parseFile();
+
+
+	LayeredGraph<char> lg(gChar, constrParser.getWordLength());
+
+
+	/*
 	gChar.traceAccept({ 'a','b','c','b','c','b','a' });
 	gChar.traceAccept({ 'a','b','c','a','b','c' });
 	
@@ -35,7 +45,7 @@ int main (void) {
 
 
 	//TODO min weight and others...
-	
+	*/
 	
 	system("pause");
 	return EXIT_SUCCESS;
