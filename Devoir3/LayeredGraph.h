@@ -25,7 +25,7 @@ public:
 	vector<vector<Vertex<T>*>> getLayers();
 	vector<Vertex<T>*> getLayer(int index);
 	virtual bool accept(vector<T> word, map<T, Constraint> constraints = nullptr);
-	virtual int weight(vector<T> word);
+	virtual int weight(vector<T> word, map<T, Constraint> constraints);
 };
 
 
@@ -131,12 +131,12 @@ bool LayeredGraph<T>::accept(vector<T> word, map<T, Constraint> constraints)
 		return current->isFinal();
 	}
 	else {
-		map<T, int> constrCount = map<T, int>();
+		map<T, int> letterCount = map<T, int>();
 		Vertex<T>* test = getInitialVertex();
 		Vertex<T>* current = getInitialVertex()->getEdge(0)->getDestination();
 		for (int i = 0; i < word.size(); i++) {
-			constrCount[word[i]]++;
-			if (constrCount[word[i]] > constraints[word[i]].getMax()) {
+			letterCount[word[i]]++;
+			if (letterCount[word[i]] > constraints[word[i]].getMax()) {
 				return false;
 			}
 			try
@@ -151,7 +151,7 @@ bool LayeredGraph<T>::accept(vector<T> word, map<T, Constraint> constraints)
 		}
 		current = current->getEdge(0)->getDestination();
 		for (int i = 0; i < getAlphabet()->getLetters().size(); i++) {
-			if (constrCount[i] < constraints[i].getMin()) {
+			if (letterCount[i] < constraints[i].getMin()) {
 				return false;
 			}
 		}
@@ -163,11 +163,16 @@ bool LayeredGraph<T>::accept(vector<T> word, map<T, Constraint> constraints)
 
 
 template<typename T>
-int LayeredGraph<T>::weight(vector<T> word)
+int LayeredGraph<T>::weight(vector<T> word, map<T, Constraint> constraints)
 {
+	map<T, int> letterCount = map<T, int>();
 	Vertex<T>* current =  getInitialVertex()->getEdge(0)->getDestination();
 	int* w = new int(0);
 	for (int i = 0; i < word.size(); i++) {
+		letterCount[word[i]]++;
+		if (letterCount[word[i]] > constraints[word[i]].getMax()) {
+			return -1;
+		}
 		try
 		{
 			current = current->nextVertex(word[i], w);
@@ -180,7 +185,11 @@ int LayeredGraph<T>::weight(vector<T> word)
 	}
 	if(current->getEdges().size()>0)
 		current = current->getEdge(0)->getDestination();
-	
+	for (int i = 0; i < getAlphabet()->getLetters().size(); i++) {
+		if (letterCount[i] < constraints[i].getMin()) {
+			return -1;
+		}
+	}
 	if (current->isFinal()) {
 		return *w;
 	}

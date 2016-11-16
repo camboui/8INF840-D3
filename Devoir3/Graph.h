@@ -1,10 +1,12 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
+#include <map>
 #include <vector>
 
 #include "Vertex.h"
 #include "Alphabet.h"
+#include "Constraint.h"
 
 using namespace std;
 
@@ -28,8 +30,8 @@ public:
 	void addVertex(int id);
 	void addEdge(Vertex<T>* initialVertex, Vertex<T>* destinationVertex, int cost, T letter);
 	virtual bool accept(vector<T> word);
-	virtual void traceAccept(vector<T> word);
-	virtual int weight(vector<T> word);
+	virtual void traceAccept(vector<T> word, map<T, Constraint> constraints = map<T, Constraint>());
+	virtual int weight(vector<T> word, map<T, Constraint> constraints = map<T, Constraint>());
 };
 
 
@@ -127,7 +129,7 @@ bool Graph<T>::accept(vector<T> word)
 }
 
 template<typename T>
-inline void Graph<T>::traceAccept(vector<T> word)
+inline void Graph<T>::traceAccept(vector<T> word, map<T, Constraint> constraints)
 {
 	//print word
 	for (int i = 0; i < word.size(); i++)
@@ -135,7 +137,7 @@ inline void Graph<T>::traceAccept(vector<T> word)
 	cout << endl;
 
 	//show if accepted or not
-	int w = weight(word);
+	int w = weight(word, constraints);
 	if (w!=-1)
 		cout << "... is ACCEPTED by g with a weight of : "<< w << endl;
 	else
@@ -144,7 +146,7 @@ inline void Graph<T>::traceAccept(vector<T> word)
 }
 
 template<typename T> 
-int Graph<T>::weight(vector<T> word)
+int Graph<T>::weight(vector<T> word, map<T, Constraint> constraints)
 {
 	Vertex<T>* current = m_initialVertex;
 	int* w = new int(0);

@@ -20,6 +20,19 @@ int main (void) {
 
 
 	LayeredGraph<char> lg(gChar, constrParser.getWordLength());
+	gChar.traceAccept({ 'a','b','c','b','c' }, constrs);
+	lg.traceAccept({ 'a','b','c','b','c' }, constrs);
+	system("pause");
+
+
+	gChar.traceAccept({ 'a','b','c','b','a' }, constrs);
+	lg.traceAccept({ 'a','b','c','b','a' }, constrs);
+	system("pause");
+
+
+	gChar.traceAccept({ 'a','b','c','b','b' }, constrs);
+	lg.traceAccept({ 'a','b','c','b','b' }, constrs);
+	system("pause");
 
 
 	/*
