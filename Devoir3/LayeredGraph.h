@@ -17,45 +17,37 @@ class LayeredGraph :
 private:
 	vector<vector<Vertex<T>*>> m_layers;
 	int m_nbLayers;
-	void findAll_rec(map<vector<T>, int>* results,Vertex<T>* v, vector<T> word, int weight, map<T, Constraint> constraints, map<T, int> letterCount);
+	void findAll_rec(vector<pair<vector<T>, int>>* results,Vertex<T>* v, vector<T> word, int weight, map<T, Constraint> constraints, map<T, int> letterCount);
 public:
 	LayeredGraph(Graph<T> g, int n);
 
 	//virtual Vertex<T>* getVertexByID(int id);
 	vector<vector<Vertex<T>*>> getLayers();
 	vector<Vertex<T>*> getLayer(int index);
-	map<vector<T>, int> findAll(map<T, Constraint> constraints);
+	vector<pair<vector<T>, int>> findAll(map<T, Constraint> constraints);
 	virtual bool accept(vector<T> word, map<T, Constraint> constraints = nullptr);
 	virtual int weight(vector<T> word, map<T, Constraint> constraints);
 };
 
 
 template<typename T>
-void LayeredGraph<T>::findAll_rec(map<vector<T>, int>* results, Vertex<T>* v, vector<T> word, int weight, map<T, Constraint> constraints, map<T, int> letterCount)
+void LayeredGraph<T>::findAll_rec(vector<pair<vector<T>, int>>* results, Vertex<T>* v, vector<T> word, int weight, map<T, Constraint> constraints, map<T, int> letterCount)
 {
 
-
-
 	for (int j = 0; j < v->getEdges().size(); j++) {
-
 		T letter = v->getEdge(j)->getLetter();
 		letterCount[letter]++;
-		//cout << "State " << v->ID() << " "  << letter << " " << letterCount[letter] << " " << constraints[letter].getMax() << endl;
 		//cout << v->ID() << "->" << letter << "->" << v->getEdge(j)->getDestination()->ID() << endl;
 
 		if (letterCount[letter] <= constraints[letter].getMax()) {
-			
-			if( word.size()==3 &&  word[0]=='a' && word [1]=='b' && word[2] == 'a' )
-				cout << v->ID() << "->" << letter << "->" << v->getEdge(j)->getDestination()->ID() << endl;
-
-			word.push_back(letter);
-			findAll_rec(results, v->getEdge(j)->getDestination(), word, weight+v->getEdge(j)->getCost(), constraints, letterCount);
+			vector<T> temp = vector<T>();
+			temp.insert(temp.end(), word.begin(), word.end());
+			temp.push_back(letter);
+			findAll_rec(results, v->getEdge(j)->getDestination(), temp, weight+v->getEdge(j)->getCost(), constraints, letterCount);
+			letterCount[letter]--;
 		}
-
-
 		if (v->getEdge(0)->getDestination()->isFinal())
 		{
-			cout << "VALID" << endl;
 			bool minOk = true;
 			for (int i = 0; i < getAlphabet()->getLetters().size(); i++)
 			{
@@ -65,9 +57,8 @@ void LayeredGraph<T>::findAll_rec(map<vector<T>, int>* results, Vertex<T>* v, ve
 				}
 			}
 			if (minOk) {
-				results->insert(pair<vector<T>, int>(word, weight));
+				results->push_back(pair<vector<T>, int>(word, weight));
 			}
-				
 		}
 	}
 }
@@ -153,22 +144,11 @@ vector<Vertex<T>*> LayeredGraph<T>::getLayer(int index)
 }
 
 template<typename T>
-map<vector<T>, int> LayeredGraph<T>::findAll(map<T, Constraint> constraints)
+vector<pair<vector<T>, int>> LayeredGraph<T>::findAll(map<T, Constraint> constraints)
 {
-	map<vector<T>, int> *results = new map<vector<T>, int>();
+	vector<pair<vector<T>, int>> *results = new vector<pair<vector<T>, int>>();
 	findAll_rec(results, getInitialVertex()->getEdge(0)->getDestination(), vector<T>(), 0, constraints, map<T, int>());
-
-	cout << "List of accepted words : " << endl;
-	for (map<vector<T>, int>::iterator it = results->begin(); it != results->end(); ++it)
-	{
-		vector<T> word = it->first;
-		for (int i = 0; i < word.size(); i++)
-			cout << word[i];
-
-		cout << " with weight " << it->second << endl;
-	}
-
-	 return *results;
+	return *results;
 }
 
 

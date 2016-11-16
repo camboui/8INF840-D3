@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <map>
+#include <algorithm>
 
 #include "GraphParser.h"
 #include "LayeredGraph.h"
@@ -8,38 +9,44 @@
 
 
 using namespace std;
+template<typename T>
+void showAcceptedWords(vector<pair<vector<T>, int>> results);
+
+template<typename T>
+bool value_comparer(pair<vector<T>, int> & a, pair<vector<T>, int> const & b);
 
 int main (void) {
 	
 	//parser file to get graph
-	GraphParser<char> parserChar("test.afdC");
-	Graph<char> gChar = parserChar.parseFile();
+	GraphParser<char> parserint("test.afdC");
+	Graph<char> baseGraph = parserint.parseFile();
 
-	ConstraintParser<char> constrParser("test_limite.afdC", gChar);
+	ConstraintParser<char> constrParser("test_limite.afdC", baseGraph);
 	map<char, Constraint> constrs = constrParser.parseFile();
 
 
-	LayeredGraph<char> lg(gChar, constrParser.getWordLength());
-	lg.findAll(constrs);
+	LayeredGraph<char> lg(baseGraph, constrParser.getWordLength());
+	vector<pair<vector<char>, int>> acceptedWords= lg.findAll(constrs);
+	showAcceptedWords(acceptedWords);
 
-	/*gChar.traceAccept({ 'a','b','c','b','c' }, constrs);
+	/*gint.traceAccept({ 'a','b','c','b','c' }, constrs);
 	lg.traceAccept({ 'a','b','c','b','c' }, constrs);
 	system("pause");
 
 
-	gChar.traceAccept({ 'a','b','c','b','a' }, constrs);
+	gint.traceAccept({ 'a','b','c','b','a' }, constrs);
 	lg.traceAccept({ 'a','b','c','b','a' }, constrs);
 	system("pause");
 
 
-	gChar.traceAccept({ 'a','b','c','b','b' }, constrs);
+	gint.traceAccept({ 'a','b','c','b','b' }, constrs);
 	lg.traceAccept({ 'a','b','c','b','b' }, constrs);
 	system("pause");*/
 
 
 	/*
-	gChar.traceAccept({ 'a','b','c','b','c','b','a' });
-	gChar.traceAccept({ 'a','b','c','a','b','c' });
+	gint.traceAccept({ 'a','b','c','b','c','b','a' });
+	gint.traceAccept({ 'a','b','c','a','b','c' });
 	
 	cout << "------------------------------" << endl << endl;
 
@@ -53,7 +60,7 @@ int main (void) {
 	cout << "------------------------------" << endl << endl;
 	
 	//for word with a length of 5
-	LayeredGraph<char> lg(gChar, 5);
+	LayeredGraph<int> lg(gint, 5);
 	lg.traceAccept({ 'a','b','c','b','c' });
 	lg.traceAccept({ 'a','b','c','b','a' });
 	lg.traceAccept({ 'a','b','c','a','b' });
@@ -64,4 +71,26 @@ int main (void) {
 	
 	system("pause");
 	return EXIT_SUCCESS;
+}
+
+template<typename T>
+bool value_comparer(pair<vector<T>, int> & a, pair<vector<T>, int> const & b)
+{
+	return a.second > b.second ;
+}
+
+template<typename T>
+void showAcceptedWords(vector<pair<vector<T>, int>> results)
+{
+	sort(results.begin(), results.end(), value_comparer<char>);
+
+	cout << "List of accepted words, sorted : " << endl;
+	for (auto it = results.begin(); it != results.end(); ++it)
+	{
+		vector<T> word = it->first;
+		for (int i = 0; i < word.size(); i++)
+			cout << word[i];
+
+		cout << " with WEIGHT of " << it->second << endl;
+	}
 }
