@@ -32,7 +32,7 @@ GraphParser<T>::GraphParser(string filename)
 
 	if (!m_file.is_open())
 	{
-		string message = filename + " opening failed !";
+		string message = "'" + filename + "' -> filename doesn't exist !";
 		throw exception(message.c_str());
 	}
 }

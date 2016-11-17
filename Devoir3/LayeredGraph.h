@@ -33,7 +33,7 @@ public:
 template<typename T>
 void LayeredGraph<T>::findAll_rec(vector<pair<vector<T>, int>>* results, Vertex<T>* v, vector<T> word, int weight, map<T, Constraint> constraints, map<T, int> letterCount)
 {
-
+	cout << "State " << v->ID() << endl;
 	for (int j = 0; j < v->getEdges().size(); j++) {
 		T letter = v->getEdge(j)->getLetter();
 		letterCount[letter]++;
@@ -80,15 +80,17 @@ LayeredGraph<T>::LayeredGraph(Graph<T> g, int n) :
 		}
 		m_layers.push_back(layer);
 	}
+	int p = 0;
 
-	//for each layer
-	for (int i = 0; i < n; i++) {
-		//for each vertex
-		for (int j = 0; j < g.getVertices().size(); j++) {
-			//add transition
-			for (int k = 0; k < g.getVertex(j)->getEdges().size(); k++) {
+	//for each vertex
+	for (int j = 0; j < g.getVertices().size(); j++) {
+		//add transition
+		for (int k = 0; k < g.getVertex(j)->getEdges().size(); k++) {
+			//for each layer
+			for (int i = 0; i < n; i++) {
 				try
 				{
+					//cout << p++ << endl;
 					Vertex<T>* initial = getVertexByID(i * 1000 + g.getVertex(j)->ID());
 					Vertex<T>* destination = getVertexByID((i + 1) * 1000 + g.getVertex(j)->getEdge(k)->getDestination()->ID());
 					addEdge(initial, destination, g.getVertex(j)->getEdge(k)->getCost(), g.getVertex(j)->getEdge(k)->getLetter());
@@ -100,7 +102,6 @@ LayeredGraph<T>::LayeredGraph(Graph<T> g, int n) :
 			}
 		}
 	}
-
 	Vertex<T>* temp = getVertexByID(1);
 
 	//link every final vertex of simpleGraph to LayeredGraph final vertex
@@ -117,19 +118,7 @@ LayeredGraph<T>::LayeredGraph(Graph<T> g, int n) :
 			addEdge(initial, finalVertex, 0, numeric_limits<T>::min()); //special values
 		}
 	}
-
 }
-
-
-//template<typename T>
-//Vertex<T>* LayeredGraph<T>::getVertexByID(int id)
-//{
-//	int layer = id / 1000;
-//	for (int i = 0; i < m_layers[layer].size(); i++) {
-//		if (m_layers[layer][i]->ID() == id) return m_layers[layer][i];
-//	}
-//	throw logic_error("there is no vertex with the ID " + id);
-//}
 
 template<typename T>
 vector<vector<Vertex<T>*>> LayeredGraph<T>::getLayers()

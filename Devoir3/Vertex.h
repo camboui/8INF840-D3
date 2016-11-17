@@ -68,7 +68,7 @@ void Vertex<T>::addEdge(Vertex<T>* initialVertex, Vertex<T>* destinationVertex, 
 	Edge<T>* e = new Edge<T>(initialVertex, destinationVertex, cost, letter);
 	if (find(m_edges.begin(), m_edges.end(), e) == m_edges.end()) {
 		for (int i = 0; i < m_edges.size(); i++) {
-			if (m_edges[i]->getLetter() == letter && m_edges[i]->getCost() == cost) {
+			if (m_edges[i]->getLetter() == letter) {
 				throw logic_error("this edge already exists");
 			}
 		}

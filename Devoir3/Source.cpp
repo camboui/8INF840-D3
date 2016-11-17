@@ -18,16 +18,43 @@ bool value_comparer(pair<vector<T>, int> & a, pair<vector<T>, int> const & b);
 int main (void) {
 	
 	//parser file to get graph
-	GraphParser<char> parserint("test.afdC");
-	Graph<char> baseGraph = parserint.parseFile();
+	string inTrans="test8.afdC",inLimits="test8_limite.afdC";
 
-	ConstraintParser<char> constrParser("test_limite.afdC", baseGraph);
-	map<char, Constraint> constrs = constrParser.parseFile();
+	//cout << "Entrez le nom du fichier d'entrees contenant les transitions : (ex : test8.afdC)" << endl;
+	//getline(cin, inTrans);
+	//
+	//cout << "Entrez le nom du fichier d'entrees contenant les limites : (ex : test8_limite.afdC)" << endl;
+	//getline(cin, inLimits);
 
 
-	LayeredGraph<char> lg(baseGraph, constrParser.getWordLength());
-	vector<pair<vector<char>, int>> acceptedWords= lg.findAll(constrs);
-	showAcceptedWords(acceptedWords);
+	try
+	{
+		cout << endl;
+		GraphParser<int> graphParser(inTrans.c_str());
+		cout << "Parsing graph from '" << inTrans << "' ..." << endl;
+		Graph<int> baseGraph = graphParser.parseFile();
+
+		ConstraintParser<int> constrParser(inLimits.c_str(), baseGraph);
+		cout << "Parsing limits from '" << inLimits << "' ..." << endl;
+		map<int, Constraint> constrs = constrParser.parseFile();
+
+		cout << "Converting graph to layared graph ..." << endl;
+		LayeredGraph<int> lg(baseGraph, constrParser.getWordLength());
+		cout << "Finding all words corresponding to limits ..." << endl;
+		vector<pair<vector<int>, int>> acceptedWords = lg.findAll(constrs);
+		showAcceptedWords(acceptedWords);
+	}
+	catch (const std::exception& e)
+	{
+		cout << "ERROR : " << e.what()  << endl;
+		system("pause");
+		return 0;
+	}
+
+
+
+
+
 
 	/*gint.traceAccept({ 'a','b','c','b','c' }, constrs);
 	lg.traceAccept({ 'a','b','c','b','c' }, constrs);
@@ -82,7 +109,7 @@ bool value_comparer(pair<vector<T>, int> & a, pair<vector<T>, int> const & b)
 template<typename T>
 void showAcceptedWords(vector<pair<vector<T>, int>> results)
 {
-	sort(results.begin(), results.end(), value_comparer<char>);
+	sort(results.begin(), results.end(), value_comparer<T>);
 
 	cout << "List of accepted words, sorted : " << endl;
 	for (auto it = results.begin(); it != results.end(); ++it)
