@@ -15,7 +15,7 @@ template <typename T>
 class Graph
 {
 private:
-	vector<Vertex<T>*> m_vertices;
+	map<int, Vertex<T>*> m_vertices;
 	Vertex<T>* m_initialVertex;
 	Alphabet<T>* m_alphabet;
 public:
@@ -23,8 +23,7 @@ public:
 
 	Alphabet<T>* getAlphabet();
 	Vertex<T>* getInitialVertex();
-	vector<Vertex<T>*> getVertices();
-	Vertex<T>* getVertex(int index);
+	map<int, Vertex<T>*> getVertices();
 	virtual Vertex<T>* getVertexByID(int id);
 	void addVertex(Vertex<T>* v);
 	void addVertex(int id);
@@ -41,8 +40,9 @@ Graph<T>::Graph(Vertex<T>* initialVertex):
 	m_initialVertex(initialVertex)
 {
 	m_alphabet = new Alphabet<T>();
-	m_vertices = vector<Vertex<T>*>();
-	m_vertices.push_back(initialVertex);
+	m_vertices = map<int,Vertex<T>*>();
+	m_vertices.insert(pair<int, Vertex<T>*>(initialVertex->ID(), initialVertex));
+
 }
 
 
@@ -59,39 +59,37 @@ Vertex<T>* Graph<T>::getInitialVertex()
 }
 
 template<typename T>
-vector<Vertex<T>*> Graph<T>::getVertices()
+map<int, Vertex<T>*> Graph<T>::getVertices()
 {
 	return m_vertices;
 }
 
-template<typename T>
-Vertex<T>* Graph<T>::getVertex(int index)
-{
-	return m_vertices[index];
-}
 
 template<typename T>
 Vertex<T>* Graph<T>::getVertexByID(int id)
 {
-	for (int i = 0; i < getVertices().size(); i++) {
-		if (getVertex(i)->ID() == id) return getVertex(i);
-	}
-	throw logic_error("there is no vertex with the ID " + id);
+	map<int, Vertex<T>*>::iterator it = m_vertices.find(id);
+	
+	if (it != m_vertices.end()) { return it->second; }
+	else { throw logic_error("there is no vertex with the ID " + id); }
 }
 
 template<typename T>
 void Graph<T>::addVertex(Vertex<T>* v)
 {
-	if (find(m_vertices.begin(), m_vertices.end(), v) != m_vertices.end()) throw logic_error("this vertex already exists");
-	m_vertices.push_back(v);
+	map<int, Vertex<T>*>::iterator it = m_vertices.find(v->ID());
+
+	if (it == m_vertices.end()) { m_vertices.insert(pair<int, Vertex<T>*>(v->ID(), v)); }
+	else { throw logic_error("this vertex already exists"); }
 }
 
 template<typename T>
 void Graph<T>::addVertex(int id)
 {
 	Vertex<T>* v = new Vertex<T>(id);
-	if (find(m_vertices.begin(), m_vertices.end(), v) != m_vertices.end()) throw logic_error("this vertex already exists");
-	m_vertices.push_back(v);
+	map<int, Vertex<T>*>::iterator it = m_map_vertices.find(id);
+	if (it == m_vertices.end()) { m_vertices.insert(pair<int, Vertex<T>*>(v->ID(), v)); }
+	else { throw logic_error("this vertex already exists"); }
 }
 
 template<typename T>

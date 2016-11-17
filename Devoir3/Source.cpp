@@ -2,6 +2,7 @@
 #include <iostream>
 #include <map>
 #include <algorithm>
+#include <ctime>
 
 #include "GraphParser.h"
 #include "LayeredGraph.h"
@@ -10,114 +11,194 @@
 
 using namespace std;
 template<typename T>
-void showAcceptedWords(vector<pair<vector<T>, int>> results);
+void showAcceptedWords(vector<pair<vector<T>, int>> results, int nbPrint);
 
 template<typename T>
 bool value_comparer(pair<vector<T>, int> & a, pair<vector<T>, int> const & b);
 
-int main (void) {
-	
+template<typename T>
+void printWordWithWeight(vector<T> word, int weight);
+
+template<typename T>
+void printWord(vector<T> word);
+
+template<typename T>
+vector<T> enterWord(int nbLetters);
+
+void showTime(clock_t startTime);
+
+int main(void) {
+
 	//parser file to get graph
-	string inTrans="test8.afdC",inLimits="test8_limite.afdC";
+	string inTrans = "test23.afdC", inLimits = "test23_limite.afdC";
+	int nbResult = 1;
+	int choice;
+	bool quit = false;
 
-	//cout << "Entrez le nom du fichier d'entrees contenant les transitions : (ex : test8.afdC)" << endl;
-	//getline(cin, inTrans);
-	//
-	//cout << "Entrez le nom du fichier d'entrees contenant les limites : (ex : test8_limite.afdC)" << endl;
-	//getline(cin, inLimits);
 
+	cout << "\t\t\t\t--- Enter your choice ---" << endl;
+	cout << "\t1 . Use default entry files : '" << inTrans << "' and '" << inLimits << "'" << endl;
+	cout << "\t2 . Give your own entry files" << endl;
+	cin >> choice;
+	if (choice == 2) {
+		cout << " -> Enter filename containing transitions : (ex : test23.afdC)" << endl;
+		cin >> inTrans;
+		
+		cout << " -> Enter filename containing limits: (ex : test23_limite.afdC)" << endl;
+		cin >> inLimits;
+	}
+	else
+		cout << "Using DEFAULT files" << endl;
 
 	try
 	{
+		
 		cout << endl;
 		GraphParser<int> graphParser(inTrans.c_str());
 		cout << "Parsing graph from '" << inTrans << "' ..." << endl;
 		Graph<int> baseGraph = graphParser.parseFile();
 
 		ConstraintParser<int> constrParser(inLimits.c_str(), baseGraph);
-		cout << "Parsing limits from '" << inLimits << "' ..." << endl;
+		cout << "Parsing constraints from '" << inLimits << "' ..." << endl;
 		map<int, Constraint> constrs = constrParser.parseFile();
 
 		cout << "Converting graph to layared graph ..." << endl;
 		LayeredGraph<int> lg(baseGraph, constrParser.getWordLength());
-		cout << "Finding all words corresponding to limits ..." << endl;
-		vector<pair<vector<int>, int>> acceptedWords = lg.findAll(constrs);
-		showAcceptedWords(acceptedWords);
+
+
+		while (!quit) {
+			cout << endl << endl;
+			cout << "\t\t\t\t--- Enter your choice ---" << endl;
+			cout << "\t1 . Enter a word to know weather it's accepted or not WITHOUT constraints by layered graph (size : " << constrParser.getWordLength() << ")" << endl;
+			cout << "\t2 . Enter a word to know weather it's accepted or not WITH constraints by layered graph (size : " << constrParser.getWordLength() << ")" << endl;
+			cout << "\t3 . Look for EVERY accepted word according to constraints (MIGHT TAKE TIME)" << endl;
+			cout << "\t4 . Look for LOWEST accepted word according to constraints" << endl;
+			cout << "\t5 . Exit" << endl;
+
+			cin >> choice;
+			std::clock_t start;
+
+			pair<vector<int>, int> acceptedLowestWeight;
+			vector<pair<vector<int>, int>> acceptedWords;
+			vector<int> wordToRead = vector<int>();
+			cout << endl;
+			switch (choice)
+			{
+			case 1:
+				wordToRead = enterWord<int>(constrParser.getWordLength());
+				start = std::clock();
+				lg.traceAccept(wordToRead);
+				showTime(start);
+				break;
+			case 2:
+				wordToRead = enterWord<int>(constrParser.getWordLength());
+				start = std::clock();
+				lg.traceAccept(wordToRead, constrs);
+				showTime(start);
+				break;
+			case 3:
+				cout << "Finding ALL words (MIGHT TAKE TIME) corresponding to limits in layered graph ..." << endl;
+				start = std::clock();
+				acceptedWords = lg.findAll(constrs);
+				showTime(start);
+				cout << " -> ENTER NUMBER OF RESULTS TO DISPLAY ..." << endl;
+				cin >> nbResult;
+				showAcceptedWords(acceptedWords, nbResult);
+				break;
+			case 4:
+				cout << "Finding lowest weight accepted ..." << endl;
+				start = std::clock();
+				acceptedLowestWeight = lg.findOnlyFirst(constrs);
+				showTime(start);
+				cout << "Lowest weight accepted word is :" << endl;
+				printWordWithWeight(get<0>(acceptedLowestWeight), get<1>(acceptedLowestWeight));
+				break;
+			case 5:
+				quit = true;
+				break;
+			default:
+				cout << "INVALID ENTRY" << endl;
+				break;
+			}
+		}
+
 	}
 	catch (const std::exception& e)
 	{
-		cout << "ERROR : " << e.what()  << endl;
+		cout << "ERROR : " << e.what() << endl;
 		system("pause");
 		return 0;
 	}
-
-
-
-
-
-
-	/*gint.traceAccept({ 'a','b','c','b','c' }, constrs);
-	lg.traceAccept({ 'a','b','c','b','c' }, constrs);
-	system("pause");
-
-
-	gint.traceAccept({ 'a','b','c','b','a' }, constrs);
-	lg.traceAccept({ 'a','b','c','b','a' }, constrs);
-	system("pause");
-
-
-	gint.traceAccept({ 'a','b','c','b','b' }, constrs);
-	lg.traceAccept({ 'a','b','c','b','b' }, constrs);
-	system("pause");*/
-
-
-	/*
-	gint.traceAccept({ 'a','b','c','b','c','b','a' });
-	gint.traceAccept({ 'a','b','c','a','b','c' });
-	
-	cout << "------------------------------" << endl << endl;
-
-	//parser file to get graph
-	GraphParser<int> parserInt("test8.afdC");
-	Graph<int> gInt = parserInt.parseFile();
-
-	gInt.traceAccept({ 1,2,3,4,5 });
-	gInt.traceAccept({ 1,2,3,4,5 });
-
-	cout << "------------------------------" << endl << endl;
-	
-	//for word with a length of 5
-	LayeredGraph<int> lg(gint, 5);
-	lg.traceAccept({ 'a','b','c','b','c' });
-	lg.traceAccept({ 'a','b','c','b','a' });
-	lg.traceAccept({ 'a','b','c','a','b' });
-
-
-	//TODO min weight and others...
-	*/
-	
-	system("pause");
 	return EXIT_SUCCESS;
+}
+
+void showTime(clock_t startTime)
+{
+	double duration = (std::clock() - startTime) / (double)CLOCKS_PER_SEC;
+	std::cout << "It took " << duration << " seconds" << endl;
+}
+
+template<typename T>
+vector<T> enterWord(int nbLetters)
+{
+	int cpt = 1;
+	vector<T>wordToRead = vector<T>();
+	T letter;
+	cout << endl << "Enter the word you want of size " << nbLetters << endl;
+	cin >> letter;
+	wordToRead.push_back(letter);
+	do
+	{
+		cpt++;
+		cout << " " << nbLetters - cpt +1 << " letters left -- ";
+		cout << "Current word is : ";
+		printWord(wordToRead);
+		cin >> letter;
+		wordToRead.push_back(letter);
+	} while (cpt < nbLetters);
+	cout << endl;
+	return wordToRead;
 }
 
 template<typename T>
 bool value_comparer(pair<vector<T>, int> & a, pair<vector<T>, int> const & b)
 {
-	return a.second > b.second ;
+	return a.second < b.second;
 }
 
 template<typename T>
-void showAcceptedWords(vector<pair<vector<T>, int>> results)
+void showAcceptedWords(vector<pair<vector<T>, int>> results, int nbPrint)
 {
 	sort(results.begin(), results.end(), value_comparer<T>);
 
-	cout << "List of accepted words, sorted : " << endl;
+	cout << "List of " << nbPrint << " smallest weight accepted words : " << endl;
+	int cpt = 0;
 	for (auto it = results.begin(); it != results.end(); ++it)
 	{
-		vector<T> word = it->first;
-		for (int i = 0; i < word.size(); i++)
-			cout << word[i];
+		printWordWithWeight(it->first, it->second);
 
-		cout << " with WEIGHT of " << it->second << endl;
+		cpt++;
+		if (cpt >= nbPrint)
+			break;
 	}
+}
+
+template<typename T>
+void printWordWithWeight(vector<T> word, int weight)
+{
+	if (word.size() == 0)
+	{
+		cout << "No word find" << endl;
+	}
+	else {
+		printWord(word);
+		cout << " with WEIGHT of " << weight << endl;
+	}
+}
+
+template<typename T>
+void printWord(vector<T> word)
+{
+		for (int i = 0; i < word.size(); i++)
+			cout << word[i] << ",";
 }
