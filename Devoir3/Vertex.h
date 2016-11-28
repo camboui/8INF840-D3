@@ -14,13 +14,16 @@ private:
 	int m_ID;
 	bool m_isFinal;	
 	vector<Edge<T>*> m_edges; //outgoing edges
+	vector<Edge<T>*> m_incomingEdges; 
 public:
 	Vertex(int id, bool isFinal);
 
 	int ID();
 	bool isFinal();
 	vector<Edge<T>*> getEdges();
+	vector<Edge<T>*> getIncomingEdges();
 	Edge<T>* getEdge(int index);
+	Edge<T>* getIncomingEdge(int index);
 	void addEdge(Vertex<T>* initialVertex, Vertex<T>* destinationVertex, int cost, T letter);
 	Vertex<T>* nextVertex(T letter);
 	Vertex<T>* nextVertex(T letter, int *w);
@@ -56,11 +59,23 @@ vector<Edge<T>*> Vertex<T>::getEdges()
 }
 
 template<typename T>
+vector<Edge<T>*> Vertex<T>::getIncomingEdges()
+{
+	return m_incomingEdges;
+}
+
+template<typename T>
 Edge<T>* Vertex<T>::getEdge(int index)
 {
 	return m_edges[index];
 }
 
+
+template<typename T>
+Edge<T>* Vertex<T>::getIncomingEdge(int index)
+{
+	return m_incomingEdges[index];
+}
 
 template<typename T>
 void Vertex<T>::addEdge(Vertex<T>* initialVertex, Vertex<T>* destinationVertex, int cost, T letter)
@@ -73,11 +88,13 @@ void Vertex<T>::addEdge(Vertex<T>* initialVertex, Vertex<T>* destinationVertex, 
 			}
 		}
 		m_edges.push_back(e);
+		destinationVertex->m_incomingEdges.push_back(e);
 	}
 	else {
 		throw logic_error("this edge already exists");
 	}
 }
+
 
 template<typename T>
 Vertex<T>* Vertex<T>::nextVertex(T letter)

@@ -27,6 +27,10 @@ vector<T> enterWord(int nbLetters);
 
 void showTime(clock_t startTime);
 
+template<typename T>
+void EdgeAccepted(Graph<T> g);
+
+
 int main(void) {
 
 	//parser file to get graph
@@ -62,9 +66,12 @@ int main(void) {
 		cout << "Parsing constraints from '" << inLimits << "' ..." << endl;
 		map<int, Constraint> constrs = constrParser.parseFile();
 
-		cout << "Converting graph to layared graph ..." << endl;
+		cout << "Converting graph to layered graph ..." << endl;
 		LayeredGraph<int> lg(baseGraph, constrParser.getWordLength());
 
+
+		
+		
 
 		while (!quit) {
 			cout << endl << endl;
@@ -73,7 +80,8 @@ int main(void) {
 			cout << "\t2 . Enter a word to know weather it's accepted or not WITH constraints by layered graph (size : " << constrParser.getWordLength() << ")" << endl;
 			cout << "\t3 . Look for EVERY accepted word according to constraints (MIGHT TAKE TIME)" << endl;
 			cout << "\t4 . Look for LOWEST accepted word according to constraints" << endl;
-			cout << "\t5 . Exit" << endl;
+			cout << "\t5 . Check if an edge can be accepted" << endl;
+			cout << "\t6 . Exit" << endl;
 
 			cin >> choice;
 			std::clock_t start;
@@ -114,6 +122,9 @@ int main(void) {
 				printWordWithWeight(get<0>(acceptedLowestWeight), get<1>(acceptedLowestWeight));
 				break;
 			case 5:
+				EdgeAccepted(lg);
+				break;
+			case 6:
 				quit = true;
 				break;
 			default:
@@ -161,6 +172,12 @@ vector<T> enterWord(int nbLetters)
 }
 
 template<typename T>
+void printID(pair<int, Vertex<T>*> p)
+{
+	p.second->ID();
+}
+
+template<typename T>
 bool value_comparer(pair<vector<T>, int> & a, pair<vector<T>, int> const & b)
 {
 	return a.second < b.second;
@@ -201,4 +218,37 @@ void printWord(vector<T> word)
 {
 		for (int i = 0; i < word.size(); i++)
 			cout << word[i] << ",";
+}
+
+template<typename T>
+void EdgeAccepted(Graph<T> g) {
+	int initialVertexID, edgeNumber;
+	for (auto const & i : g.getVertices())
+	{
+		if (i.second != nullptr) {
+			cout << i.second->ID() << " / ";
+		}
+	}
+	cout << endl << "Choose an initial vertex : " << endl;
+	cin >> initialVertexID;
+	Vertex<T>* v = g.getVertexByID(initialVertexID);
+	cout << "Choose an edge : " << endl;
+	for (int i = 0; i < v->getEdges().size(); i++) {
+		cout << i + 1 << ". FROM " << v->getEdge(i)->getInitial()->ID()
+			<< " TO " << v->getEdge(i)->getDestination()->ID()
+			<< " WITH " << v->getEdge(i)->getLetter()
+			<< " FOR " << v->getEdge(i)->getCost() << endl;
+	}
+	cin >> edgeNumber;
+	Edge<T>* e = v->getEdge(edgeNumber - 1);
+	cout <<"\tThe edge FROM " << e->getInitial()->ID()
+		<< " TO " << e->getDestination()->ID()
+		<< " WITH " << e->getLetter()
+		<< " FOR " << e->getCost();
+	if (g.acceptEdge(e) == true) {
+		cout << " CAN be accepted" << endl;
+	}
+	else {
+		cout << " CAN'T be accepted" << endl;
+	}
 }

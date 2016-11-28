@@ -19,7 +19,6 @@ public:
 	Vertex<T>* getDestination();
 	int		getCost();
 	T		getLetter();
-	string	toString();
 };
 
 template <typename T>
@@ -54,15 +53,6 @@ template<typename T>
 T Edge<T>::getLetter()
 {
 	return m_letter;
-}
-
-template<typename T>
-string Edge<T>::toString()
-{
-	return	" from " + m_initialVertex->ID() + 
-			" to " + m_destinationVertex->ID() + 
-			" with the letter " + m_letter + 
-			" for a cost of " + m_cost;
 }
 
 

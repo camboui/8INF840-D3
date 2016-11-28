@@ -18,12 +18,15 @@ private:
 	map<int, Vertex<T>*> m_vertices;
 	Vertex<T>* m_initialVertex;
 	Alphabet<T>* m_alphabet;
+	bool leadToFinalVertex(Vertex<T>* v);
+	bool accessibleFromInitialVertex(Vertex<T>* v);
 public:
 	Graph(Vertex<T>* initialVertex);
 
 	Alphabet<T>* getAlphabet();
 	Vertex<T>* getInitialVertex();
 	map<int, Vertex<T>*> getVertices();
+	Vertex<T>* getVertex(int index);
 	virtual Vertex<T>* getVertexByID(int id);
 	void addVertex(Vertex<T>* v);
 	void addVertex(int id);
@@ -31,6 +34,7 @@ public:
 	virtual bool accept(vector<T> word);
 	virtual void traceAccept(vector<T> word, map<T, Constraint> constraints = map<T, Constraint>());
 	virtual int weight(vector<T> word, map<T, Constraint> constraints = map<T, Constraint>());
+	bool acceptEdge(Edge<T>* e);
 };
 
 
@@ -62,6 +66,12 @@ template<typename T>
 map<int, Vertex<T>*> Graph<T>::getVertices()
 {
 	return m_vertices;
+}
+
+template<typename T>
+Vertex<T>* Graph<T>::getVertex(int index)
+{
+	return m_vertices[index];
 }
 
 
@@ -167,6 +177,52 @@ int Graph<T>::weight(vector<T> word, map<T, Constraint> constraints)
 		return -1;
 	}
 }
+
+
+template<typename T>
+bool Graph<T>::accessibleFromInitialVertex(Vertex<T>* v)
+{
+	if (v->ID() != m_initialVertex->ID()){
+		for (int i = 0; i < v->getIncomingEdges().size(); i++){
+			Vertex<T>* current = v->getIncomingEdge(i)->getInitial();
+			if (current->ID() == m_initialVertex->ID()){
+				return true;
+			}
+			else if (accessibleFromInitialVertex(current) == true){
+				return true;
+			}
+		}
+		return false;
+	}
+	else return true;
+}
+
+template<typename T>
+bool Graph<T>::leadToFinalVertex(Vertex<T>* v)
+{
+	if (!v->isFinal()){
+		for (int i = 0; i < v->getEdges().size(); i++){
+			Vertex<T>* current = v->getEdge(i)->getDestination();
+			if (current->isFinal()){
+				return true;
+			}
+			else if (leadToFinalVertex(current)){
+				return true;
+			}
+		}
+		return false;
+	}
+	return true;
+}
+
+template<typename T>
+bool Graph<T>::acceptEdge(Edge<T>* e)
+{
+	Vertex<T>* from = e->getInitial();
+	Vertex<T>* to = e->getDestination();
+	return accessibleFromInitialVertex(from) && leadToFinalVertex(to);
+}
+
 
 
 
