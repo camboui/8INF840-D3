@@ -117,6 +117,7 @@ int main(void) {
 				cout << "Finding lowest weight accepted ..." << endl;
 				start = std::clock();
 				acceptedLowestWeight = lg.findOnlyFirst(constrs);
+				//acceptedLowestWeight = lg.findOnlyFirstDijkstra(constrs);
 				showTime(start);
 				cout << "Lowest weight accepted word is :" << endl;
 				printWordWithWeight(get<0>(acceptedLowestWeight), get<1>(acceptedLowestWeight));

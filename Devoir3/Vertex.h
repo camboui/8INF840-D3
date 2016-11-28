@@ -71,6 +71,7 @@ Edge<T>* Vertex<T>::getEdge(int index)
 }
 
 
+
 template<typename T>
 Edge<T>* Vertex<T>::getIncomingEdge(int index)
 {

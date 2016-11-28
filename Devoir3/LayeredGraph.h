@@ -20,6 +20,7 @@ private:
 	int m_nbLayers;
 	void findAll_rec(vector<pair<vector<T>, int>>* results,Vertex<T>* v, vector<T> word, int weight, map<T, Constraint> constraints, map<T, int> letterCount);
 	void findOnlyFirst_rec(pair<vector<T>, int> & results, int * currentMin, Vertex<T>* v, vector<T> word, int weight, map<T, Constraint> constraints, map<T, int> letterCount);
+
 public:
 	LayeredGraph(Graph<T> g, int n);
 
@@ -28,6 +29,7 @@ public:
 	vector<Vertex<T>*> getLayer(int index);
 	vector<pair<vector<T>, int>> findAll(map<T, Constraint> constraints);
 	pair<vector<T>, int> findOnlyFirst(map<T, Constraint> constraints);
+	//pair<vector<T>, int> findOnlyFirstDijkstra(map<T, Constraint> constraints);
 	virtual bool accept(vector<T> word, map<T, Constraint> constraints = nullptr);
 	virtual int weight(vector<T> word, map<T, Constraint> constraints);
 };
@@ -112,6 +114,7 @@ void LayeredGraph<T>::findOnlyFirst_rec(pair<vector<T>, int>& results, int *curr
 		}
 	}
 }
+
 
 
 template<typename T>
@@ -211,6 +214,86 @@ pair<vector<T>, int> LayeredGraph<T>::findOnlyFirst(map<T, Constraint> constrain
 	return results;
 }
 
+/*
+template<typename T>
+pair<vector<T>, int> LayeredGraph<T>::findOnlyFirstDijkstra(map<T, Constraint> constraints)
+{
+	vector<T> word = vector<T>();
+	map<T, int> countLetter = map<T, int>();
+	vector<Edge<T>*> edgesStack = vector<Edge<T>*>();
+	int weight = 0;
+	Vertex<T>* currentV = getInitialVertex()->getEdge(0)->getDestination();
+	bool accepted = false;
+	while (!accepted) {
+		vector<Edge<T>*> edges = currentV->getEdges();
+		int minCost = numeric_limits<int>::max();
+		Edge<T>* minEdge = nullptr;
+		for (int i = 0; i < edges.size(); i++) {
+			if (	edges[i]->getCost() < minCost
+				&&	countLetter[edges[i]->getLetter()] < constraints[edges[i]->getLetter()].getMax()) {
+				minEdge = edges[i];
+				minCost = edges[i]->getCost();
+			}
+		}
+		if (minEdge != nullptr) {
+			edgesStack.push_back(minEdge);
+			word.push_back(minEdge->getLetter());
+			weight += minEdge->getCost();
+			countLetter[minEdge->getLetter()]++;
+			currentV = minEdge->getDestination();
+			if (currentV->isFinal()) {
+				bool minOk = true;
+				for (int i = 0; i < getAlphabet()->getLetters().size(); i++)
+				{
+					T letter = getAlphabet()->getLetter(i);
+					if (countLetter[letter] < constraints[letter].getMin()) {
+						minOk = false;
+						break;
+					}
+				}
+				if (!minOk) {
+					word.pop_back();
+					weight -= edgesStack[edgesStack.size() - 1]->getCost();
+					currentV = edgesStack[edgesStack.size() - 1]->getInitial();
+					for (int i = 0; i < currentV->getEdges().size(); i++) {
+						if (currentV->getEdge(i) == edgesStack[edgesStack.size() - 1]) {
+							currentV->getEdges().erase(currentV->getEdges().begin() + i);
+							break;
+						}
+					}
+					edgesStack.pop_back();
+				}
+			}
+			else {
+				word.pop_back();
+				weight -= edgesStack[edgesStack.size() - 1]->getCost();
+				currentV = edgesStack[edgesStack.size() - 1]->getInitial();
+				for (int i = 0; i < currentV->getEdges().size(); i++) {
+					if (currentV->getEdge(i) == edgesStack[edgesStack.size() - 1]) {
+						currentV->getEdges().erase(currentV->getEdges().begin() + i);
+						break;
+					}
+				}
+				edgesStack.pop_back();
+			}
+		}
+		else {
+			word.pop_back();
+			weight -= edgesStack[edgesStack.size() - 1]->getCost();
+			currentV = edgesStack[edgesStack.size() - 1]->getInitial();
+			for (int i = 0; i < currentV->getEdges().size(); i++) {
+				if (currentV->getEdge(i) == edgesStack[edgesStack.size() - 1]) {
+					currentV->getEdges().erase(currentV->getEdges().begin() + i);
+					break;
+				}
+			}
+			edgesStack.pop_back();
+		}
+	}
+	return make_pair(word,weight);
+}
+
+*/
 
 template<typename T>
 bool LayeredGraph<T>::accept(vector<T> word, map<T, Constraint> constraints)
